@@ -29,7 +29,6 @@
             $mform->addElement("select", "course_categories", get_string("form:course_categories", "report_coursecompletion"), $categories);
             $mform->setDefault("course_categories", 0);
             $mform->addElement("text", "course", get_string("form:course", "report_coursecompletion"));
-
             $complete_options = [
                 get_string("form:completed_options_any", "report_coursecompletion"),
                 get_string("form:completed_options_completed", "report_coursecompletion"),

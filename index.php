@@ -57,7 +57,7 @@
         process_data_field($data, $where, $params, "u.suspended", "suspended", "!=");
         process_data_field($data, $where, $params, "u.deleted", "deleted", "!=");
 
-        process_data_field($data, $where, $params, "c.id", "course_categories", "=");
+        process_data_field($data, $where, $params, "c.category", "course_categories", "=");
         process_data_field($data, $where, $params, "c.fullname", "course", "LIKE");
 
         if(isset($data->completed_options)) {
