@@ -28,12 +28,31 @@
         'timestarted' => array('cc.timestarted'),
         'timecompleted' => array('cc.timecompleted'),
     );
+    //build array of all the possible sort columns
+    $allsorts = array()
+    foreach($scolumns as $sorts) {
+        foreach($sorts as $s) {
+            $allsorts[] = $s;
+        }
+    }
 
     $sort = optional_param("sort", $default_sort, PARAM_NOTAGS); // Sorting column.
     $dir = optional_param("dir", "ASC", PARAM_ALPHA);           // Sorting direction.
     $page = optional_param("page", 0, PARAM_INT);               // Page number.
     $perpage = optional_param("perpage", 30, PARAM_INT);        // Results to display per page.
     $export = optional_param("export", 0, PARAM_INT);        // Export to csv the results.
+
+    /*
+     * Sanitize sort and dir to ensure they are valid column sorts.
+     * and the dir is either ASC or DESC. This must be done as these
+     * values are user supplied and included in the query.
+     */
+    if(!in_array($sorts, $allsorts)) {
+        $sort = $default_sort;
+    }
+    if($dir != 'ASC' || $dir != 'DESC') {
+        $dir = 'ASC';
+    }
 
     //Variables that hold SQL.
     $where = "";
