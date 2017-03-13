@@ -29,7 +29,7 @@
         'timecompleted' => array('cc.timecompleted'),
     );
     //build array of all the possible sort columns
-    $allsorts = array()
+    $allsorts = array();
     foreach($scolumns as $sorts) {
         foreach($sorts as $s) {
             $allsorts[] = $s;
