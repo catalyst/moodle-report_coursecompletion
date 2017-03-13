@@ -47,7 +47,7 @@
      * and the dir is either ASC or DESC. This must be done as these
      * values are user supplied and included in the query.
      */
-    if(!in_array($sorts, $allsorts)) {
+    if(!in_array($sort, $allsorts)) {
         $sort = $default_sort;
     }
     if($dir != 'ASC' || $dir != 'DESC') {
