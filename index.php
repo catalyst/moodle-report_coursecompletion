@@ -54,6 +54,9 @@
         $dir = 'ASC';
     }
 
+    //Ensure the maxiumum records perpage is not ever set too high.
+    $perpage = min(100, $perpage);
+
     //Variables that hold SQL.
     $where = "";
     $cohort_join = "";
