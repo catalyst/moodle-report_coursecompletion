@@ -41,10 +41,10 @@ The table shows the following data with pagination
 Finally there is a button to export the current set of user selected by your choices to csv
 
 
-This plugin was developed at the Catalyst Open Source Academy with the assistance of four high school students! Thank you to:
+This plugin was developed at the Catalyst Open Source Academy with the assistance of four high school students! Thank you to (In alphabetical order):
 
-* A
-* B
+* Ben Rhodes rhodes(dot)j(dot)ben(at)gmail(dot)com
+* Victoria Roberts victoriaroberts1001(at)gmail(dot)com
 * C
 * D
 
