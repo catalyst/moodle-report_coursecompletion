@@ -1,7 +1,8 @@
 <?php
     $string['pluginname'] = 'Course Completion';
     $string['coursecompletion'] = 'Course Completion';
-    $string['report_header'] = 'Course Completion';
+    $string['report_header_admin'] = 'Course Completion Records for All Users';
+    $string['report_header'] = 'Course Completion Record for ';
     $string['count_string'] = '{$a->filter} shown of total: {$a->total}';
     $string['exportbutton'] = 'Export csv';
 
@@ -10,6 +11,7 @@
     $string['table:export_header_course'] = 'Course';
     $string['table:export_header_timestarted'] = 'Time Started';
     $string['table:export_header_timecompleted'] = 'Time Completed';
+    $string['table:export_header_completionstatus']  = 'Complete';
 
     $string['table:sort_header_u.firstname']  = 'Firstname';
     $string['table:sort_header_u.lastname']  = 'Lastname';
@@ -17,6 +19,7 @@
     $string['table:sort_header_c.fullname']  = 'Course';
     $string['table:sort_header_cc.timecompleted']  = 'Timecompleted';
     $string['table:sort_header_cc.timestarted']  = 'Timestarted';
+    $string['table:sort_header_completionstatus']  = 'Complete';
 
     $string['form:active'] = 'Show active';
     $string['form:suspended'] = 'Hide suspended';

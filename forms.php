@@ -9,20 +9,22 @@
             global $CFG;
             $mform = $this->_form;
 
-            $mform->addElement("header", "section_userdetails", get_string("form:section_userdetails", "report_coursecompletion"));
-            $mform->addElement("text", "firstname", get_string("form:firstname", "report_coursecompletion"));
-            $mform->setType("firstname", PARAM_ALPHA);
-            $mform->addElement("text", "lastname", get_string("form:lastname", "report_coursecompletion"));
-            $mform->setType("lastname", PARAM_ALPHA);
-            $mform->addElement("text", "email", get_string("form:email", "report_coursecompletion"));
-            $mform->setType("email", PARAM_NOTAGS);
-            $cohorts = $this->get_cohorts();
-            $mform->addElement("select", "cohorts", get_string("form:cohorts", "report_coursecompletion"), $cohorts);
-            $mform->setDefault("cohorts", 0);
+            if (IS_ADMIN) {
+                $mform->addElement("header", "section_userdetails", get_string("form:section_userdetails", "report_coursecompletion"));
+                $mform->addElement("text", "firstname", get_string("form:firstname", "report_coursecompletion"));
+                $mform->setType("firstname", PARAM_ALPHA);
+                $mform->addElement("text", "lastname", get_string("form:lastname", "report_coursecompletion"));
+                $mform->setType("lastname", PARAM_ALPHA);
+                $mform->addElement("text", "email", get_string("form:email", "report_coursecompletion"));
+                $mform->setType("email", PARAM_NOTAGS);
+                $cohorts = $this->get_cohorts();
+                $mform->addElement("select", "cohorts", get_string("form:cohorts", "report_coursecompletion"), $cohorts);
+                $mform->setDefault("cohorts", 0);
 
-            $mform->addElement("advcheckbox", "active", get_string("form:active", "report_coursecompletion"));
-            $mform->addElement("advcheckbox", "suspended", get_string("form:suspended", "report_coursecompletion"));
-            $mform->addElement("advcheckbox", "deleted", get_string("form:deleted", "report_coursecompletion"));
+                $mform->addElement("advcheckbox", "active", get_string("form:active", "report_coursecompletion"));
+                $mform->addElement("advcheckbox", "suspended", get_string("form:suspended", "report_coursecompletion"));
+                $mform->addElement("advcheckbox", "deleted", get_string("form:deleted", "report_coursecompletion"));
+            }
 
             $mform->addElement("header", "section_coursedetails", get_string("form:section_coursedetails", "report_coursecompletion"));
             $categories = $this->get_course_categories();
@@ -35,7 +37,7 @@
                 get_string("form:completed_options_not_completed", "report_coursecompletion")
             ];
             $mform->addElement("select", "completed_options", get_string("form:completed_options", "report_coursecompletion"), $complete_options);
-            $mform->setType("course", PARAM_ALPHA);
+            $mform->setType("course", PARAM_TEXT);
 
             $options = ['optional' => true];
             $mform->addElement("header", "section_timecompleted", get_string("form:section_timecompleted", "report_coursecompletion"));
