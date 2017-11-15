@@ -50,6 +50,9 @@ if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
 } else if (has_capability('report/coursecompletion:view', $context)) {
     // User must be a student - can see the logged in user's records only
     $access = true;
+} else if (has_capability('report/coursecompletion:view', $systemcontext)) {
+    // User must be authenticated - can see the logged in user's records only
+    $access = true;
 }
 
 if (!$access) {
