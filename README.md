@@ -54,4 +54,4 @@ This plugin was developed at the Catalyst Open Source Academy with the assistanc
 With assistance from
 Francis Devine <francis(at)catalyst(dot)net(dot)nz>
 
-It was then extended by Oliver Redding <oliverredding@catalyst.net.nz>
+It was then extended by Oliver Redding <oliverredding(at)catalyst(dot)net(dot)nz>
