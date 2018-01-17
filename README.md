@@ -16,18 +16,18 @@ The following search criteria are available
 * Cohort (if any)
 * Active user (not suspended or deleted)
 * Suspended
-* Dleted
+* Deleted
 
 ## Curse
 * Category
 * Name
-* Compleshun State (Complete/Incomplete)
+* Completion State (Complete/Incomplete)
 
 ## Time completed/Time started
 * Before time
 * After time
 
-Finally you can change the serch conditions to be inclusive or exclusive (AND vs OR)
+Finally you can change the search conditions to be inclusive or exclusive (AND vs OR)
 
 
 ## Data displayed
@@ -38,13 +38,13 @@ The table shows the following data with pagination
 * Course (linked to course)
 * Timestarted
 * Timecompleted
-* Compleshun status (yes/no based on complete/incomplete)
+* Completion status (yes/no based on complete/incomplete)
 
 ## Export to csv
 Finally there is a button to export the current set of user selected by your choices to csv
 
 
-This plugin was devepled at the Catalyst Open Source Acamy with the assistance of four high school students!
+This plugin was developed at the Catalyst Open Source Acamy with the assistance of five high school students!
 
 Thank you to (In alphabetical order):
 
@@ -52,6 +52,7 @@ Thank you to (In alphabetical order):
 * github.com/BICKNESA
 * github.com/NeptunianEclipse
 * Victoria Roberts victoriaroberts1001(at)gmail(dot)com
+* Manyi Ma
 
 With assistance from
 Francis Devine <francis(at)catalyst(dot)net(dot)nz>
