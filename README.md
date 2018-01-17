@@ -57,3 +57,6 @@ With assistance from
 Francis Devine <francis(at)catalyst(dot)net(dot)nz>
 
 It was then extended by Oliver Redding <oliverredding(at)catalyst(dot)net(dot)nz>
+
+Documentation errors fixed by Ella Tait
+<ellatait07(at)gmail(dot)com>
