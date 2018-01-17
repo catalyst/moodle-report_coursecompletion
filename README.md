@@ -1,4 +1,4 @@
-# Abut
+# About
 This plugin allows you to report on course completions globally across a site, it currently has been tested for Moodle 3.1 and 3.2 with Mysql(MariaDB) or Postgresql
 
 The report shows a different view depending on whether the logged in user is an admin or a student. An admin can see all records for all student. They can also filter results by firstname, lastname, email, and cohort. A student can only see their own course completion records and they can only filter by course or time.
