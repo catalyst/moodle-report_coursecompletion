@@ -51,5 +51,5 @@
     $string['form:operator_or'] = 'Any condition';
     $string['form:operator'] = 'Show records that match:';
 
-
-?>
+   // Privacy API.
+   $string['privacy:no_userid_data'] = 'The course completion plugin does not share data to external services, store user preferences, or identify users in its database.';
