@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,9 +25,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once __DIR__."/../../config.php";
-require_once $CFG->libdir."/adminlib.php";
-require_once $CFG->dirroot.'/report/coursecompletion/forms.php';
+require_once __DIR__ . "/../../config.php";
+require_once $CFG->libdir . "/adminlib.php";
+require_once $CFG->dirroot . '/report/coursecompletion/forms.php';
 
 $course = $DB->get_record('course', array('id' => SITEID));
 $userid = $USER->id;
@@ -44,26 +45,25 @@ $access = false;
 if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
     // User must be site admin or manager - can see records for all users
     $access = true;
-} else if (has_capability('report/coursecompletion:view', $personalcontext)) {
+} elseif (has_capability('report/coursecompletion:view', $personalcontext)) {
     // User is likely a parent/mentor - can see the student's records only
     $access = true;
-} else if (has_capability('report/coursecompletion:view', $context)) {
+} elseif (has_capability('report/coursecompletion:view', $context)) {
     // User must be a student - can see the logged in user's records only
     $access = true;
-} else if (has_capability('report/coursecompletion:view', $systemcontext)) {
+} elseif (has_capability('report/coursecompletion:view', $systemcontext)) {
     // User must be authenticated - can see the logged in user's records only
     $access = true;
 }
 
 if (!$access) {
     // no access to coursecompletion report!
-    print_error('nopermissiontoviewcoursecompletionreport', 'error',  $CFG->wwwroot.'/my');
+    print_error('nopermissiontoviewcoursecompletionreport', 'error', $CFG->wwwroot . '/my');
 }
 
 if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
     define('IS_ADMIN', true);
-    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout"=>"report"));
-
+    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout" => "report"));
 } else {
     define("IS_ADMIN", false);
     $PAGE->set_pagelayout('report');
@@ -80,7 +80,8 @@ $columns = array(
     "completionstatus",
 );
 // Add user columns if user is admin
-if (IS_ADMIN) { array_unshift($columns, 'name', 'email');
+if (IS_ADMIN) {
+    array_unshift($columns, 'name', 'email');
 }
 
 // Sort sql fields for each column
@@ -96,7 +97,8 @@ if (IS_ADMIN) {
         array(
         'name' => array('u.firstname', 'u.lastname'),
         'email' => array('u.email')
-        ), $scolumns
+        ),
+        $scolumns
     );
 }
 
@@ -109,8 +111,8 @@ $cohort_join  = "";
 
 // Build array of all the possible sort columns
 $allsorts = array();
-foreach($scolumns as $sorts) {
-    foreach($sorts as $s) {
+foreach ($scolumns as $sorts) {
+    foreach ($sorts as $s) {
         $allsorts[] = $s;
     }
 }
@@ -127,7 +129,7 @@ $export = optional_param("export", 0, PARAM_INT);            // Export to csv th
  * values are user supplied and included in the query.
  */
 
-if(!in_array($sort, $allsorts)) {
+if (!in_array($sort, $allsorts)) {
     $sort = $default_sort;
 }
 $dir = $dir === 'DESC' ? 'DESC' : 'ASC';
@@ -140,12 +142,12 @@ $mform = new ReportForm();
 $data = $mform->get_data();
 
 //Use the session to hold the form data in case they refresh the page after a post.
-if(!$data && isset($USER->session) && isset($USER->session['coursecompletion_formd'])) {
+if (!$data && isset($USER->session) && isset($USER->session['coursecompletion_formd'])) {
     $data = $USER->session['coursecompletion_formd'];
     $mform->set_data($data);
 }
 
-if($data) {//Build the SQL query based on the form data.
+if ($data) {//Build the SQL query based on the form data.
     $USER->session['coursecompletion_formd'] = $data;
     if (IS_ADMIN) {
         process_data_field($data, $where, $params, "u.firstname", "firstname", "LIKE");
@@ -158,11 +160,11 @@ if($data) {//Build the SQL query based on the form data.
     process_data_field($data, $where, $params, "c.category", "course_categories", "=");
     process_data_field($data, $where, $params, "c.fullname", "course", "LIKE");
 
-    if(isset($data->completed_options)) {
-        if($data->completed_options == 1) {
+    if (isset($data->completed_options)) {
+        if ($data->completed_options == 1) {
             add_condition_connectors($data, $where, $params);
             $where .= " cc.timecompleted IS NOT NULL";
-        } else if($data->completed_options == 2) {
+        } elseif ($data->completed_options == 2) {
             add_condition_connectors($data, $where, $params);
             $where .= " cc.timecompleted IS NULL";
         }
@@ -174,7 +176,7 @@ if($data) {//Build the SQL query based on the form data.
     process_data_field($data, $where, $params, "cc.timestarted", "timestarted_after", ">=");
     process_data_field($data, $where, $params, "cc.timestarted", "timestarted_before", "<=");
 
-    if(IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
+    if (IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
         $cohort_join = "LEFT JOIN {cohort_members} AS cm ON u.id = cm.userid AND cm.cohortid = :cohortid";
         add_condition_connectors($data, $where, $params);
         $where .= " cm.id IS NOT NULL ";
@@ -185,14 +187,17 @@ if($data) {//Build the SQL query based on the form data.
 // We need to inlcude user-specific search parameters if the user is not an
 // admin, so that only that user's records show.
 if (!IS_ADMIN) {
-    if ($where == "") { $where = $user_where;
-    } else { $where = "$user_where AND ($where)";
+    if ($where == "") {
+        $where = $user_where;
+    } else {
+        $where = "$user_where AND ($where)";
     }
 }
-if (!IS_ADMIN) { $params = array_merge($user_params, $params);
+if (!IS_ADMIN) {
+    $params = array_merge($user_params, $params);
 }
 
-if(IS_ADMIN && $where != "") {
+if (IS_ADMIN && $where != "") {
     $where = "WHERE $where";
 }
 
@@ -223,7 +228,7 @@ $count_sql_total = "SELECT COUNT(cc.id)
         $user_where";
 
 //If requested, dump to csv instead, use a recordset because the size could grow large.
-if($export) {
+if ($export) {
     $records = $DB->get_recordset_sql($sql, $params);
     // output headers so that the file is downloaded rather than displayed.
     header('Content-Type: text/csv; charset=utf-8');
@@ -234,7 +239,7 @@ if($export) {
 
     //Generate column headers.
     $columnsh = array();
-    foreach($columns as $column) {
+    foreach ($columns as $column) {
         $columnsh[] = get_string("table:export_header_$column", 'report_coursecompletion');
     }
 
@@ -243,7 +248,7 @@ if($export) {
 
     //Now dump the data.
     $final = new stdClass();
-    foreach($records as $record) {
+    foreach ($records as $record) {
         if (IS_ADMIN) {
             $final->name = fullname($record);
             $final->email = $record->email;
@@ -281,7 +286,7 @@ $mform->display();
 $base_url = new moodle_url("index.php", array("sort" => $sort, "dir" => $dir, "perpage" => $perpage, "page" => $page));
 
 //Count of records shown as per filter options + href anchor link for jumping back to the table after a search or sort.
-$a = new StdClass;
+$a = new StdClass();
 $a->total = $total_record_count;
 $a->filter = $changes_count;
 echo get_string("count_string", "report_coursecompletion", $a);
@@ -292,10 +297,10 @@ echo $OUTPUT->paging_bar($changes_count, $page, $perpage, $base_url);
 //Calculate table headers (clickable links that do sorting).
 $hcolumns = array();
 //Foreach column we look at it's applicable sort columns and build a final link header.
-foreach($columns as $column) {
+foreach ($columns as $column) {
     $final = array();
-    foreach($scolumns[$column] as $sortcolumn) {
-        if($sort != $sortcolumn) {
+    foreach ($scolumns[$column] as $sortcolumn) {
+        if ($sort != $sortcolumn) {
             $column_dir = $dir;
             $column_icon = "";
         } else {
@@ -322,14 +327,14 @@ $table = new html_table();
 $table->head = $hcolumns;
 $table->attributes["class"] = "admintable generaltable";
 $table->data = [];
-foreach($records as $record) {
+foreach ($records as $record) {
     $final = new stdClass();
     if (IS_ADMIN) {
         $finalname = fullname($record);
-        $final->fullname = add_link('/user/view.php', array('id' =>$record->userid), $finalname);
+        $final->fullname = add_link('/user/view.php', array('id' => $record->userid), $finalname);
         $final->email = $record->email;
     }
-    $final->course = add_link('/course/view.php', array('id' =>$record->course), $record->fullname);
+    $final->course = add_link('/course/view.php', array('id' => $record->course), $record->fullname);
     $final->timestarted = time_format($record->timestarted);
     $final->timecompleted = time_format($record->timecompleted);
     $final->completionstatus = $record->timecompleted ? 'Yes' : 'No';
@@ -337,15 +342,15 @@ foreach($records as $record) {
 }
 
 echo html_writer::table($table);
-$buttonurl = new moodle_url("index.php", array("sort" => $sort, "dir" => $dir, "perpage" => $perpage, "page" => $page, "export"=>1));
+$buttonurl = new moodle_url("index.php", array("sort" => $sort, "dir" => $dir, "perpage" => $perpage, "page" => $page, "export" => 1));
 $buttonstring = get_string('exportbutton', 'report_coursecompletion');
 echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
-function add_condition_connectors(&$data, &$where, &$params, $force_and = false) 
+function add_condition_connectors(&$data, &$where, &$params, $force_and = false)
 {
-    if(!empty($params)) {
-        if($force_and || (isset($data->operator) && $data->operator == 0)) {
+    if (!empty($params)) {
+        if ($force_and || (isset($data->operator) && $data->operator == 0)) {
             $where .= " AND ";
         } else {
             $where .= " OR ";
@@ -353,25 +358,25 @@ function add_condition_connectors(&$data, &$where, &$params, $force_and = false)
     }
 }
 
-function add_link($url, $params, $string) 
+function add_link($url, $params, $string)
 {
     return html_writer::link(new moodle_url($url, $params), $string);
 }
 
-function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $comparison, $start_group = false, $force_and = false, $end_group = false) 
+function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $comparison, $start_group = false, $force_and = false, $end_group = false)
 {
-    if(isset($data->{"$field_name"}) && $data->{"$field_name"}) {
+    if (isset($data->{"$field_name"}) && $data->{"$field_name"}) {
         add_condition_connectors($data, $where, $params, $force_and);
-        $params[$field_name] = $data->{"$field_name"}.($comparison == "LIKE" ? "%" : "");
+        $params[$field_name] = $data->{"$field_name"} . ($comparison == "LIKE" ? "%" : "");
 
-        if($start_group) {
+        if ($start_group) {
             $where .= "(";
         }
 
         $colon = ":";
 
         // If the search parameter is a string, make it case insensitive
-        if(preg_match("/[a-z]/i", $params[$field_name])) {
+        if (preg_match("/[a-z]/i", $params[$field_name])) {
             $db_field = "LOWER($db_field)";
             $field_name = "LOWER($colon$field_name)";
             $colon = "";
@@ -379,18 +384,17 @@ function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $
 
         $where .= "$db_field $comparison $colon$field_name";
 
-        if($end_group) {
+        if ($end_group) {
             $where .= ")";
         }
     }
 }
 
-function time_format($time) 
+function time_format($time)
 {
-    if(isset($time) && $time != 0) {
+    if (isset($time) && $time != 0) {
         return userdate($time);
     } else {
         return "-";
     }
 }
-?>

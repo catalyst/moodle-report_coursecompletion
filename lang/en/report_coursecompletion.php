@@ -1,4 +1,5 @@
 <?php
+
     $string['pluginname'] = 'Course Completion';
     $string['coursecompletion'] = 'Course Completion';
     $string['report_header_admin'] = 'Course Completion Records for All Users';
