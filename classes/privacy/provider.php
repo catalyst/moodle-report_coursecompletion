@@ -17,8 +17,8 @@
 /**
  * Privacy Subsystem implementation for block_course_summary.
  *
- * @package    block_course_template
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package block_course_template
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace report_coursecompletion\privacy;
@@ -28,12 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for block_course_summary implementing null_provider.
  *
- * @copyright 	Catalyst IT {@link http://catalyst.net.nz}
- * @author 	bO Pierce 
+ * @copyright   Catalyst IT {@link http://catalyst.net.nz}
+ * @author      bO Pierce 
  * @contributor Michael Nixon <michael.nixon@catalyst.net.nz>
- * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\null_provider {
+class provider implements \core_privacy\local\metadata\null_provider
+{
     // This plugin does not store any personal user data.
     use \core_privacy\local\legacy_polyfill;
 
@@ -46,9 +47,10 @@ class provider implements \core_privacy\local\metadata\null_provider {
      * But get_reason() still works 
      * because of the trait legacy_polyfill.
      *
-     * @return  string
+     * @return string
      */
-    public static function _get_reason() {
+    public static function _get_reason() 
+    {
         return 'privacy:no_userid_data';
     }
 }

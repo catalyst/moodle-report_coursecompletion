@@ -24,9 +24,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__."/../../config.php");
-require_once($CFG->libdir."/adminlib.php");
-require_once($CFG->dirroot.'/report/coursecompletion/forms.php');
+require_once __DIR__."/../../config.php";
+require_once $CFG->libdir."/adminlib.php";
+require_once $CFG->dirroot.'/report/coursecompletion/forms.php';
 
 $course = $DB->get_record('course', array('id' => SITEID));
 $userid = $USER->id;
@@ -80,7 +80,8 @@ $columns = array(
     "completionstatus",
 );
 // Add user columns if user is admin
-if (IS_ADMIN) array_unshift($columns, 'name', 'email');
+if (IS_ADMIN) { array_unshift($columns, 'name', 'email');
+}
 
 // Sort sql fields for each column
 $scolumns = array(
@@ -91,10 +92,12 @@ $scolumns = array(
 );
 // Add user columns if user is admin
 if (IS_ADMIN) {
-    $scolumns = array_merge(array(
+    $scolumns = array_merge(
+        array(
         'name' => array('u.firstname', 'u.lastname'),
         'email' => array('u.email')
-    ), $scolumns);
+        ), $scolumns
+    );
 }
 
 // Variables that hold SQL
@@ -182,10 +185,12 @@ if($data) {//Build the SQL query based on the form data.
 // We need to inlcude user-specific search parameters if the user is not an
 // admin, so that only that user's records show.
 if (!IS_ADMIN) {
-    if ($where == "") $where = $user_where;
-    else $where = "$user_where AND ($where)";
+    if ($where == "") { $where = $user_where;
+    } else { $where = "$user_where AND ($where)";
+    }
 }
-if (!IS_ADMIN) $params = array_merge($user_params, $params);
+if (!IS_ADMIN) { $params = array_merge($user_params, $params);
+}
 
 if(IS_ADMIN && $where != "") {
     $where = "WHERE $where";
@@ -303,7 +308,7 @@ foreach($columns as $column) {
         //Update parameters for sort and direction for this column in the final url.
         $base_url->param('sort', $sortcolumn);
         $base_url->param('dir', $column_dir);
-        if ( $sortcolumn === "completionstatus") {
+        if ($sortcolumn === "completionstatus") {
             $final[] = "<a href=javascript:void(0)>$column_header</a>";
         } else {
             $final[] = "<a href=$base_url#table>$column_header</a>$column_icon";
@@ -337,7 +342,8 @@ $buttonstring = get_string('exportbutton', 'report_coursecompletion');
 echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
-function add_condition_connectors(&$data, &$where, &$params, $force_and = false) {
+function add_condition_connectors(&$data, &$where, &$params, $force_and = false) 
+{
     if(!empty($params)) {
         if($force_and || (isset($data->operator) && $data->operator == 0)) {
             $where .= " AND ";
@@ -347,11 +353,13 @@ function add_condition_connectors(&$data, &$where, &$params, $force_and = false)
     }
 }
 
-function add_link($url, $params, $string) {
+function add_link($url, $params, $string) 
+{
     return html_writer::link(new moodle_url($url, $params), $string);
 }
 
-function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $comparison, $start_group = false, $force_and = false, $end_group = false) {
+function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $comparison, $start_group = false, $force_and = false, $end_group = false) 
+{
     if(isset($data->{"$field_name"}) && $data->{"$field_name"}) {
         add_condition_connectors($data, $where, $params, $force_and);
         $params[$field_name] = $data->{"$field_name"}.($comparison == "LIKE" ? "%" : "");
@@ -377,7 +385,8 @@ function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $
     }
 }
 
-function time_format($time) {
+function time_format($time) 
+{
     if(isset($time) && $time != 0) {
         return userdate($time);
     } else {
