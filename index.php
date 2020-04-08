@@ -192,7 +192,7 @@ if(IS_ADMIN && $where != "") {
 $order_by = "ORDER BY $sort $dir";
 
 // Get list of user fields for display.
-$user_cols = IS_ADMIN ? get_all_user_name_fields($returnsql = true, 'u') . ", u.email, " : "";
+$user_cols = IS_ADMIN ? get_all_user_name_fields(true, 'u') . ", u.email, " : "";
 
 //Generate the final SQL.
 $sql = "SELECT cc.id, cc.userid,$user_cols cc.course, c.fullname, cc.timestarted, cc.timecompleted
