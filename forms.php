@@ -12,7 +12,7 @@ class ReportForm extends moodleform
         global $CFG;
         $mform = $this->_form;
 
-        if (IS_ADMIN) {
+        if (REPORT_COURSECOMPLETION_IS_ADMIN) {
             $mform->addElement("header", "section_userdetails", get_string("form:section_userdetails", "report_coursecompletion"));
             $mform->addElement("text", "firstname", get_string("form:firstname", "report_coursecompletion"));
             $mform->setType("firstname", PARAM_ALPHA);
