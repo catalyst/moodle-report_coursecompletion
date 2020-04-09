@@ -61,16 +61,15 @@ if (!$access) {
 }
 
 if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
-    define('IS_ADMIN', true);
-    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout"=>"report"));
-
+    define('REPORT_COURSECOMPLETION_IS_ADMIN', true);
+    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout" => "report"));
 } else {
-    define("IS_ADMIN", false);
+    define("REPORT_COURSECOMPLETION_IS_ADMIN", false);
     $PAGE->set_pagelayout('report');
 }
 
 // The default column to sort by
-$default_sort = IS_ADMIN ? "u.firstname" : "c.fullname";
+$default_sort = REPORT_COURSECOMPLETION_IS_ADMIN ? "u.firstname" : "c.fullname";
 
 // Columns of the report
 $columns = array(
@@ -80,7 +79,9 @@ $columns = array(
     "completionstatus",
 );
 // Add user columns if user is admin
-if (IS_ADMIN) array_unshift($columns, 'name', 'email');
+if (REPORT_COURSECOMPLETION_IS_ADMIN) {
+    array_unshift($columns, 'name', 'email');
+}
 
 // Sort sql fields for each column
 $scolumns = array(
@@ -90,8 +91,9 @@ $scolumns = array(
     'completionstatus' => array('completionstatus'),
 );
 // Add user columns if user is admin
-if (IS_ADMIN) {
-    $scolumns = array_merge(array(
+if (REPORT_COURSECOMPLETION_IS_ADMIN) {
+    $scolumns = array_merge(
+        array(
         'name' => array('u.firstname', 'u.lastname'),
         'email' => array('u.email')
     ), $scolumns);
@@ -144,7 +146,7 @@ if(!$data && isset($USER->session) && isset($USER->session['coursecompletion_for
 
 if($data) {//Build the SQL query based on the form data.
     $USER->session['coursecompletion_formd'] = $data;
-    if (IS_ADMIN) {
+    if (REPORT_COURSECOMPLETION_IS_ADMIN) {
         process_data_field($data, $where, $params, "u.firstname", "firstname", "LIKE");
         process_data_field($data, $where, $params, "u.lastname", "lastname", "LIKE");
         process_data_field($data, $where, $params, "u.email", "email", "LIKE");
@@ -171,7 +173,7 @@ if($data) {//Build the SQL query based on the form data.
     process_data_field($data, $where, $params, "cc.timestarted", "timestarted_after", ">=");
     process_data_field($data, $where, $params, "cc.timestarted", "timestarted_before", "<=");
 
-    if(IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
+    if (REPORT_COURSECOMPLETION_IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
         $cohort_join = "LEFT JOIN {cohort_members} AS cm ON u.id = cm.userid AND cm.cohortid = :cohortid";
         add_condition_connectors($data, $where, $params);
         $where .= " cm.id IS NOT NULL ";
@@ -181,20 +183,26 @@ if($data) {//Build the SQL query based on the form data.
 
 // We need to inlcude user-specific search parameters if the user is not an
 // admin, so that only that user's records show.
-if (!IS_ADMIN) {
-    if ($where == "") $where = $user_where;
-    else $where = "$user_where AND ($where)";
+if (!REPORT_COURSECOMPLETION_IS_ADMIN) {
+    if ($where == "") {
+        $where = $user_where;
+    } else {
+        $where = "$user_where AND ($where)";
+    }
+}
+if (!REPORT_COURSECOMPLETION_IS_ADMIN) {
+    $params = array_merge($user_params, $params);
 }
 if (!IS_ADMIN) $params = array_merge($user_params, $params);
 
-if(IS_ADMIN && $where != "") {
+if (REPORT_COURSECOMPLETION_IS_ADMIN && $where != "") {
     $where = "WHERE $where";
 }
 
 $order_by = "ORDER BY $sort $dir";
 
 // Get list of user fields for display.
-$user_cols = IS_ADMIN ? get_all_user_name_fields(true, 'u') . ", u.email, " : "";
+$user_cols = REPORT_COURSECOMPLETION_IS_ADMIN ? get_all_user_name_fields(true, 'u') . ", u.email, " : "";
 
 //Generate the final SQL.
 $sql = "SELECT cc.id, cc.userid,$user_cols cc.course, c.fullname, cc.timestarted, cc.timecompleted
@@ -238,8 +246,8 @@ if($export) {
 
     //Now dump the data.
     $final = new stdClass();
-    foreach($records as $record) {
-        if (IS_ADMIN) {
+    foreach ($records as $record) {
+        if (REPORT_COURSECOMPLETION_IS_ADMIN) {
             $final->name = fullname($record);
             $final->email = $record->email;
         }
@@ -261,13 +269,13 @@ if($export) {
 $currentstart = $page * $perpage; //Count of where to start with records
 $records = $DB->get_records_sql($sql, $params, $currentstart, $perpage);
 
-$total_record_count = IS_ADMIN ? $DB->count_records("course_completions") : $DB->count_records_sql($count_sql_total, $user_params);
+$total_record_count = REPORT_COURSECOMPLETION_IS_ADMIN ? $DB->count_records("course_completions") : $DB->count_records_sql($count_sql_total, $user_params);
 $changes_count = $DB->count_records_sql($count_sql, $params);
 
 //Start display of the page, itself.
 
 echo $OUTPUT->header();
-$header_string = IS_ADMIN ? get_string("report_header_admin", "report_coursecompletion") : get_string("report_header", "report_coursecompletion") . fullname($USER, true);
+$header_string = REPORT_COURSECOMPLETION_IS_ADMIN ? get_string("report_header_admin", "report_coursecompletion") : get_string("report_header", "report_coursecompletion") . fullname($USER, true);
 echo $OUTPUT->heading($header_string);
 
 $mform->display();
@@ -319,7 +327,7 @@ $table->attributes["class"] = "admintable generaltable";
 $table->data = [];
 foreach($records as $record) {
     $final = new stdClass();
-    if (IS_ADMIN) {
+    if (REPORT_COURSECOMPLETION_IS_ADMIN) {
         $finalname = fullname($record);
         $final->fullname = add_link('/user/view.php', array('id' =>$record->userid), $finalname);
         $final->email = $record->email;
