@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 
     defined("MOODLE_INTERNAL") || die;
 

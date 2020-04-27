@@ -40,18 +40,11 @@ $personalcontext = context_user::instance($userid);
 
 $PAGE->set_context($personalcontext);
 
+$capabilities = array('report/coursecompletion:view',
+    'report/coursecompletion:view');
 $access = false;
-if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
-    // User must be site admin or manager - can see records for all users
-    $access = true;
-} else if (has_capability('report/coursecompletion:view', $personalcontext)) {
-    // User is likely a parent/mentor - can see the student's records only
-    $access = true;
-} else if (has_capability('report/coursecompletion:view', $context)) {
-    // User must be a student - can see the logged in user's records only
-    $access = true;
-} else if (has_capability('report/coursecompletion:view', $systemcontext)) {
-    // User must be authenticated - can see the logged in user's records only
+
+if (has_any_capability( $capabilities, $systemcontext)){ 
     $access = true;
 }
 
