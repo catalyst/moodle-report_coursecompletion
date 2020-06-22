@@ -203,7 +203,7 @@ $sql = "SELECT cc.id, cc.userid,$usercols cc.course, c.fullname, cc.timestarted,
         FROM {course_completions} AS cc
         JOIN {user} AS u ON cc.userid = u.id
         JOIN {course} AS c ON cc.course = c.id
-        $cohrtjoin $where $orderby";
+        $cohortjoin $where $orderby";
 
 // The sql for the parameterised count.
 $countsql = "SELECT COUNT(cc.id)
@@ -382,11 +382,11 @@ function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
         // If the search parameter is a string, make it case insensitive.
         if (preg_match("/[a-z]/i", $params[$fieldname])) {
             $dbfield = "LOWER($dbfield)";
-            $fieldname = "LOWER($colon$field_name)";
+            $fieldname = "LOWER($colon$fieldname)";
             $colon = "";
         }
 
-        $where .= "$dbfield $comparison $colon$field_name";
+        $where .= "$dbfield $comparison $colon$fieldname";
 
         if ($endgroup) {
             $where .= ")";
