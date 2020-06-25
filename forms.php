@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . "/../../config.php");
+require(__DIR__ . "/../../config.php");
 require_login();
 require_once($CFG->libdir . "/formslib.php");
 
