@@ -17,13 +17,8 @@
 /**
  * Privacy Subsystem implementation for report_coursecompletion.
  *
-<<<<<<< HEAD:classes/privacy/provider.php
- * @package    block_course_template
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-=======
  * @package report_coursecompletion
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
->>>>>>> 498e7bedee2... report/coursecompletion: Fix coding style errors:report/coursecompletion/classes/privacy/provider.php
  */
 
 namespace report_coursecompletion\privacy;
@@ -33,12 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
- * @copyright 	Catalyst IT {@link http://catalyst.net.nz}
- * @author 	bO Pierce 
+ * @copyright   Catalyst IT {@link http://catalyst.net.nz}
+ * @author      bO Pierce
  * @contributor Michael Nixon <michael.nixon@catalyst.net.nz>
- * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\null_provider {
+class provider implements \core_privacy\local\metadata\null_provider
+{
     // This plugin does not store any personal user data.
     use \core_privacy\local\legacy_polyfill;
 
@@ -48,10 +44,10 @@ class provider implements \core_privacy\local\metadata\null_provider {
      *
      * This function is compatible with old php version.
      * Diff is the underscore '_' in the beginning.
-     * But get_reason() still works 
+     * But get_reason() still works
      * because of the trait legacy_polyfill.
      *
-     * @return  string
+     * @return string
      */
     public static function _get_reason() {
         return 'privacy:no_userid_data';
