@@ -15,10 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for block_course_summary.
+ * Privacy Subsystem implementation for report_coursecompletion.
  *
+<<<<<<< HEAD:classes/privacy/provider.php
  * @package    block_course_template
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+=======
+ * @package report_coursecompletion
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+>>>>>>> 498e7bedee2... report/coursecompletion: Fix coding style errors:report/coursecompletion/classes/privacy/provider.php
  */
 
 namespace report_coursecompletion\privacy;
@@ -26,7 +31,7 @@ namespace report_coursecompletion\privacy;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Privacy Subsystem for block_course_summary implementing null_provider.
+ * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
  * @copyright 	Catalyst IT {@link http://catalyst.net.nz}
  * @author 	bO Pierce 
