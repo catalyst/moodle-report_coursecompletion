@@ -33,7 +33,6 @@ require_once($CFG->libdir . "/formslib.php");
 class ReportForm extends moodleform
 {
     public function definition() {
-        global $CFG;
         $mform = $this->_form;
 
         if (REPORT_COURSECOMPLETION_IS_ADMIN) {
