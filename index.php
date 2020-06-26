@@ -352,7 +352,10 @@ echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
 function add_condition_connectors(
-    &$data, &$where, &$params, $forceand = false) {
+    &$data, &$where, &$params, $forceand) {
+    if (empty($forceand)) {
+        $forceand = false;
+    }
     if (!empty($params)) {
         if ($forceand || (isset($data->operator) && $data->operator == 0)) {
             $where .= " AND ";
