@@ -142,15 +142,15 @@ if (!$data && isset($USER->session) && isset($USER->session['coursecompletion_fo
 if ($data) {  // Build the SQL query based on the form data.
     $USER->session['coursecompletion_formd'] = $data;
     if (REPORT_COURSECOMPLETION_IS_ADMIN) {
-        process_data_field($data, $where, $params, "u.firstname", "firstname", "LIKE");
-        process_data_field($data, $where, $params, "u.lastname", "lastname", "LIKE");
-        process_data_field($data, $where, $params, "u.email", "email", "LIKE");
-        process_data_field($data, $where, $params, "u.suspended", "suspended", "!=");
-        process_data_field($data, $where, $params, "u.deleted", "deleted", "!=");
+        process_data_field($data, $where, $params, "u.firstname", "firstname", "LIKE", "", "", "");
+        process_data_field($data, $where, $params, "u.lastname", "lastname", "LIKE", "", "", "");
+        process_data_field($data, $where, $params, "u.email", "email", "LIKE", "", "", "");
+        process_data_field($data, $where, $params, "u.suspended", "suspended", "!=", "", "", "");
+        process_data_field($data, $where, $params, "u.deleted", "deleted", "!=", "", "", "");
     }
 
-    process_data_field($data, $where, $params, "c.category", "course_categories", "=");
-    process_data_field($data, $where, $params, "c.fullname", "course", "LIKE");
+    process_data_field($data, $where, $params, "c.category", "course_categories", "=", "", "", "");
+    process_data_field($data, $where, $params, "c.fullname", "course", "LIKE", "", "", "");
 
     if (isset($data->completed_options)) {
         if ($data->completed_options == 1) {
@@ -162,11 +162,11 @@ if ($data) {  // Build the SQL query based on the form data.
         }
     }
 
-    process_data_field($data, $where, $params, "cc.timecompleted", "timecompleted_after", ">=");
-    process_data_field($data, $where, $params, "cc.timecompleted", "timecompleted_before", "<=");
+    process_data_field($data, $where, $params, "cc.timecompleted", "timecompleted_after", ">=", "", "", "");
+    process_data_field($data, $where, $params, "cc.timecompleted", "timecompleted_before", "<=", "", "", "");
 
-    process_data_field($data, $where, $params, "cc.timestarted", "timestarted_after", ">=");
-    process_data_field($data, $where, $params, "cc.timestarted", "timestarted_before", "<=");
+    process_data_field($data, $where, $params, "cc.timestarted", "timestarted_after", ">=", "", "", "");
+    process_data_field($data, $where, $params, "cc.timestarted", "timestarted_before", "<=", "", "", "");
 
     if (REPORT_COURSECOMPLETION_IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
         $cohortjoin = "LEFT JOIN {cohort_members} cm ON u.id = cm.userid AND cm.cohortid = :cohortid";
@@ -353,9 +353,8 @@ echo $OUTPUT->footer();
 
 function add_condition_connectors(
     &$data, &$where, &$params, $forceand) {
-    if (empty($forceand)) {
-        $forceand = false;
-    }
+    $forceand = set_false_if_empty($forceand);
+
     if (!empty($params)) {
         if ($forceand || (isset($data->operator) && $data->operator == 0)) {
             $where .= " AND ";
@@ -370,7 +369,11 @@ function add_link($url, $params, $string) {
 }
 
 function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
-    $comparison, $startgroup = false, $forceand = false, $endgroup = false) {
+    $comparison, $startgroup, $forceand, $endgroup = null) {
+
+    $startgroup = set_false_if_empty($startgroup);
+    $forceand = set_false_if_empty($forceand);
+    $endgroup = set_false_if_empty($endgroup);
 
     if (isset($data->{"$fieldname"}) && $data->{"$fieldname"}) {
         add_condition_connectors($data, $where, $params, $forceand);
@@ -395,6 +398,13 @@ function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
             $where .= ")";
         }
     }
+}
+
+function set_false_if_empty($param) {
+    if (empty($param)) {
+        $param = false;
+    }
+    return $param;
 }
 
 function time_format($time) {
