@@ -351,6 +351,12 @@ $buttonstring = get_string('exportbutton', 'report_coursecompletion');
 echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
+/**
+ * @param $data
+ * @param $where
+ * @param $params
+ * @param $forceand
+ */
 function add_condition_connectors(
     &$data, &$where, &$params, $forceand) {
     $forceand = set_false_if_empty($forceand);
@@ -364,10 +370,27 @@ function add_condition_connectors(
     }
 }
 
+/**
+ * @param $url
+ * @param $params
+ * @param $string
+ * @return mixed
+ */
 function add_link($url, $params, $string) {
     return html_writer::link(new moodle_url($url, $params), $string);
 }
 
+/**
+ * @param $data
+ * @param $where
+ * @param $params
+ * @param $dbfield
+ * @param $fieldname
+ * @param $comparison
+ * @param $startgroup
+ * @param $forceand
+ * @param null $endgroup
+ */
 function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
     $comparison, $startgroup, $forceand, $endgroup = null) {
 
@@ -400,6 +423,10 @@ function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
     }
 }
 
+/**
+ * @param $param
+ * @return bool
+ */
 function set_false_if_empty($param) {
     if (empty($param)) {
         $param = false;
@@ -407,6 +434,10 @@ function set_false_if_empty($param) {
     return $param;
 }
 
+/**
+ * @param $time
+ * @return string
+ */
 function time_format($time) {
     if (isset($time) && $time != 0) {
         return userdate($time);
