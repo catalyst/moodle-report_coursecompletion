@@ -17,7 +17,7 @@
 /**
  * Coursecompletion report
  *
- * @package    report
+ * @package    report_coursecompletion
  * @subpackage coursecompletion
  * @copyright  2017 Catalyst IT Ltd
  * @author     Oliver Redding <oliverredding@catalyst.net.nz>
@@ -352,6 +352,7 @@ echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
 /**
+ * Appends AND / OR operators to data fields that are assigned to the $where parameter.
  * @param $data
  * @param $where
  * @param $params
@@ -371,6 +372,7 @@ function add_condition_connectors(
 }
 
 /**
+ * Generates a simple html link after constructing a new instance of moodle_url.
  * @param $url
  * @param $params
  * @param $string
@@ -381,6 +383,8 @@ function add_link($url, $params, $string) {
 }
 
 /**
+ * Sets default data filed values to false, ensures case-insensitive searches, and calls add_condition_connectors()
+ * to set missing AND / OR operators.
  * @param $data
  * @param $where
  * @param $params
@@ -424,6 +428,7 @@ function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
 }
 
 /**
+ * Assigns boolean false value to any empty parameter.
  * @param $param
  * @return bool
  */
@@ -435,6 +440,7 @@ function set_false_if_empty($param) {
 }
 
 /**
+ * Converts timestamp to datestring.
  * @param $time
  * @return string
  */
@@ -445,3 +451,4 @@ function time_format($time) {
         return "-";
     }
 }
+
