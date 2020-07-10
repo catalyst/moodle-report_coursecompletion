@@ -17,6 +17,7 @@
 /**
  * Privacy Subsystem implementation for report_coursecompletion.
  *
+ * @copyright  2018 Zig Tan <zig@moodle.com>
  * @package report_coursecompletion
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,9 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
- * @copyright   Catalyst IT {@link http://catalyst.net.nz}
- * @author      bO Pierce
- * @contributor Michael Nixon <michael.nixon@catalyst.net.nz>
+ * @copyright   2019 Catalyst IT {@link http://catalyst.net.nz}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider
