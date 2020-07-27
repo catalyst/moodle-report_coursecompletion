@@ -128,7 +128,6 @@ $dir = $dir === 'DESC' ? 'DESC' : 'ASC';
 
 // Ensure the maxiumum records perpage is not ever set too high.
 $perpage = min(100, $perpage);
-
 // Intialise mform.
 $mform = new ReportForm();
 $data = $mform->get_data();
@@ -176,7 +175,7 @@ if ($data) {  // Build the SQL query based on the form data.
     }
 }
 
-// We need to inlcude user-specific search parameters if the user is not an
+// We need to include user-specific search parameters if the user is not an
 // admin, so that only that user's records show.
 if (!REPORT_COURSECOMPLETION_IS_ADMIN) {
     if ($where == "") {
@@ -373,27 +372,30 @@ function add_condition_connectors(
 
 /**
  * Generates a simple html link after constructing a new instance of moodle_url.
- * @param $url
- * @param $params
- * @param $string
- * @return mixed
+ * @param string $url The URL.
+ * @param string $params These params override current params in moodle_url().
+ * or add new ones.
+ * @param string $string The contents that go between opening and closing tags.
+ * @return string HTML fragment.
  */
 function add_link($url, $params, $string) {
     return html_writer::link(new moodle_url($url, $params), $string);
 }
 
 /**
- * Sets default data filed values to false, ensures case-insensitive searches, and calls add_condition_connectors()
- * to set missing AND / OR operators.
- * @param $data
- * @param $where
- * @param $params
- * @param $dbfield
- * @param $fieldname
- * @param $comparison
- * @param $startgroup
- * @param $forceand
- * @param null $endgroup
+ * Builds a SQL query for case insensitive searching from form data.
+ * @param bool|false|mixed|object|stdClass $data Form data stored in session.
+ * @param string $where Where clause.
+ * @param array $params Search parameter. Typically stores user ID and cohort
+ * ID in other uses.
+ * @param string $dbfield Value of a database field.
+ * @param string $fieldname Name of a database field.
+ * @param string $comparison Comparison operator or a LIKE operator.
+ * @param string|bool $startgroup Could be used to append ")" to a WHERE
+ * clause.
+ * @param string $forceand A nonempty value would convert an OR operator
+ * to AND.
+ * @param string|bool $endgroup Could be used to append ")" to a WHERE clause.
  */
 function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
     $comparison, $startgroup, $forceand, $endgroup = null) {
@@ -428,8 +430,15 @@ function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname,
 }
 
 /**
- * Assigns boolean false value to any empty parameter.
- * @param $param
+ * Assigns a boolean false value to any empty parameter.
+ *
+ * Passing parameters here from the top of another function allows that
+ * function to set a value to FALSE by default without failing the test for
+ * single responsibility violations. This is important, because setting
+ * default values on the first line of a function definition does fail
+ * the test for single responsibility violations.
+ *
+ * @param string|int|float|bool|array|NULL $param
  * @return bool
  */
 function set_false_if_empty($param) {
@@ -441,8 +450,9 @@ function set_false_if_empty($param) {
 
 /**
  * Converts timestamp to datestring.
- * @param $time
- * @return string
+ * @param int $time The timestamp in UTC, as obtained from the database.
+ * @return string The formatted date/time, or a hyphen if $time is set to
+ * a non-zero value.
  */
 function time_format($time) {
     if (isset($time) && $time != 0) {
