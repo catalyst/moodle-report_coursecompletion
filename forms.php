@@ -30,8 +30,20 @@ require(__DIR__ . "/../../config.php");
 require_login();
 require_once($CFG->libdir . "/formslib.php");
 
+/**
+ * Class ReportForm
+ *
+ * @package    report_coursecompletion
+ * @copyright  2017 Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class ReportForm extends moodleform
 {
+    /**
+     * Defines the Moodle form for report_coursecompletion.
+     *
+     * @throws coding_exception
+     */
     public function definition() {
         $mform = $this->_form;
 
@@ -107,6 +119,13 @@ class ReportForm extends moodleform
         $this->add_action_buttons(false, get_string("form:search", "report_coursecompletion"));
     }
 
+    /**
+     * Returns array of all category names from course_categories table.
+     *
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     private function get_course_categories() {
         global $DB;
         $finalcategories = [];
@@ -120,6 +139,13 @@ class ReportForm extends moodleform
         return $finalcategories;
     }
 
+    /**
+     * Returns an array of all cohort names from the cohort table.
+     *
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     private function get_cohorts() {
         global $DB;
         $finalcohorts = [];
