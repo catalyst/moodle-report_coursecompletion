@@ -17,8 +17,7 @@
 /**
  * Define capabilities for the coursecompletion report
  *
- * @package    report
- * @subpackage coursecompletion
+ * @package    report_coursecompletion
  * @copyright  2017 Catalyst IT Ltd
  * @author     Oliver Redding <oliverredding@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

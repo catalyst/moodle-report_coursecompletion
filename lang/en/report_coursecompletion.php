@@ -17,8 +17,7 @@
 /**
  * Coursecompletion report
  *
- * @package    report
- * @subpackage coursecompletion
+ * @package    report_coursecompletion
  * @copyright  2017 Catalyst IT Ltd
  * @author     Francis Devine <francis@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
