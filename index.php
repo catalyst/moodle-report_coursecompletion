@@ -153,10 +153,10 @@ if ($data) {  // Build the SQL query based on the form data.
 
     if (isset($data->completed_options)) {
         if ($data->completed_options == 1) {
-            add_condition_connectors($data, $where, $params);
+            add_condition_connectors($data, $where, $params, "");
             $where .= " cc.timecompleted IS NOT NULL";
         } else if ($data->completed_options == 2) {
-            add_condition_connectors($data, $where, $params);
+            add_condition_connectors($data, $where, $params, "");
             $where .= " cc.timecompleted IS NULL";
         }
     }
@@ -169,7 +169,7 @@ if ($data) {  // Build the SQL query based on the form data.
 
     if (REPORT_COURSECOMPLETION_IS_ADMIN && isset($data->cohorts) && $data->cohorts != 0) {
         $cohortjoin = "LEFT JOIN {cohort_members} cm ON u.id = cm.userid AND cm.cohortid = :cohortid";
-        add_condition_connectors($data, $where, $params);
+        add_condition_connectors($data, $where, $params, "");
         $where .= " cm.id IS NOT NULL ";
         $params["cohortid"] = $data->cohorts;
     }
@@ -351,11 +351,12 @@ echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
 /**
- * Appends AND / OR operators to data fields that are assigned to the $where parameter.
- * @param $data
- * @param $where
- * @param $params
- * @param $forceand
+ * Appends AND / OR operators to data fields that are assigned to $where param.
+ * @param object $data Form data stored in session.
+ * @param string $where Where clause.
+ * @param array $params Typically stores user ID and cohort ID.
+ * @param string $forceand A nonempty value would convert an OR operator
+ * to AND.
  */
 function add_condition_connectors(
     &$data, &$where, &$params, $forceand) {
@@ -384,7 +385,7 @@ function add_link($url, $params, $string) {
 
 /**
  * Builds a SQL query for case insensitive searching from form data.
- * @param bool|false|mixed|object|stdClass $data Form data stored in session.
+ * @param object $data Form data stored in session.
  * @param string $where Where clause.
  * @param array $params Search parameter. Typically stores user ID and cohort
  * ID in other uses.
