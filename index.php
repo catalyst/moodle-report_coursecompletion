@@ -26,49 +26,41 @@
 require_once(__DIR__."/../../config.php");
 require_once($CFG->libdir."/adminlib.php");
 
-$course = $DB->get_record('course', array('id' => SITEID));
-$userid = $USER->id;
-
 require_login(null, false);
-$PAGE->set_course($course);
 $PAGE->set_url(new moodle_url('/report/coursecompletion/index.php'));
-$context = context_course::instance($course->id);
+
 $systemcontext = context_system::instance();
-$personalcontext = context_user::instance($userid);
+$personalcontext = context_user::instance($USER->id);
 
-$PAGE->set_context($personalcontext);
-
-$access = false;
 $showallusers = false;
 if (has_capability('report/coursecompletion:viewall', $systemcontext)) {
     // User must be site admin or manager - can see records for all users.
-    $access = true;
     $showallusers = true;
+    $PAGE->set_context($systemcontext);
+    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout" => "report"));
+
+    $defaultsort = "u.firstname";
 } else if (has_capability('report/coursecompletion:view', $personalcontext)) {
     // User is likely a parent/mentor - can see the student's records only.
-    $access = true;
-} else if (has_capability('report/coursecompletion:view', $context)) {
-    // User must be a student - can see the logged in user's records only.
-    $access = true;
-} else if (has_capability('report/coursecompletion:view', $systemcontext)) {
-    // User must be authenticated - can see the logged in user's records only.
-    $access = true;
-}
+    $PAGE->set_pagelayout('report');
+    $PAGE->set_context($personalcontext);
 
-if (!$access) {
-    // No access to coursecompletion report.
+    $defaultsort = "c.fullname";
+} else {
     print_error('nopermissiontoviewcoursecompletionreport', 'error',  $CFG->wwwroot.'/my');
 }
 
-if ($showallusers) {
-    admin_externalpage_setup("reportcoursecompletion", "", null, "", array("pagelayout" => "report"));
+$sort = optional_param("sort", $defaultsort, PARAM_NOTAGS); // Sorting column.
+$dir = optional_param("dir", "ASC", PARAM_ALPHA);    // Sorting direction.
+$page = optional_param("page", 0, PARAM_INT);        // Page number.
+$perpage = optional_param("perpage", 30, PARAM_INT); // Results to display per page.
+$export = optional_param("export", 0, PARAM_INT);    // Export to csv the results.
 
-} else {
-    $PAGE->set_pagelayout('report');
-}
+// Dir can only be DESC or ASC.
+$dir = $dir === 'DESC' ? 'DESC' : 'ASC';
 
-// The default column to sort by.
-$defaultsort = $showallusers ? "u.firstname" : "c.fullname";
+// Ensure the maxiumum records perpage is not ever set too high.
+$perpage = min(100, $perpage);
 
 // Columns of the report.
 $columns = array(
@@ -77,10 +69,6 @@ $columns = array(
     "timecompleted",
     "completionstatus",
 );
-// Add user columns if user is admin.
-if ($showallusers) {
-    array_unshift($columns, 'name', 'email');
-}
 
 // Sort sql fields for each column.
 $scolumns = array(
@@ -89,20 +77,17 @@ $scolumns = array(
     'timecompleted' => array('cc.timecompleted'),
     'completionstatus' => array('completionstatus'),
 );
-// Add user columns if user is admin.
+
+// Add user columns if showing all users.
 if ($showallusers) {
+    array_unshift($columns, 'name', 'email');
+
     $scolumns = array_merge(array(
         'name' => array('u.firstname', 'u.lastname'),
         'email' => array('u.email')
     ), $scolumns);
-}
 
-// Variables that hold SQL.
-$userwhere   = "WHERE u.id = :userid";
-$userparams  = array('userid' => $USER->id);
-$where        = "";
-$params       = [];
-$cohortjoin  = "";
+}
 
 // Build array of all the possible sort columns.
 $allsorts = array();
@@ -112,25 +97,17 @@ foreach ($scolumns as $sorts) {
     }
 }
 
-$sort = optional_param("sort", $defaultsort, PARAM_NOTAGS); // Sorting column.
-$dir = optional_param("dir", "ASC", PARAM_ALPHA);            // Sorting direction.
-$page = optional_param("page", 0, PARAM_INT);                // Page number.
-$perpage = optional_param("perpage", 30, PARAM_INT);         // Results to display per page.
-$export = optional_param("export", 0, PARAM_INT);            // Export to csv the results.
-
-/*
- * Sanitize sort and dir to ensure they are valid column sorts.
- * and the dir is either ASC or DESC. This must be done as these
- * values are user supplied and included in the query.
- */
-
+// Sanitize sort to ensure they are valid column sorts.
 if (!in_array($sort, $allsorts)) {
     $sort = $defaultsort;
 }
-$dir = $dir === 'DESC' ? 'DESC' : 'ASC';
 
-// Ensure the maxiumum records perpage is not ever set too high.
-$perpage = min(100, $perpage);
+// Variables that hold SQL.
+$userwhere   = "WHERE u.id = :userid";
+$userparams  = array('userid' => $USER->id);
+$where        = "";
+$params       = [];
+$cohortjoin  = "";
 
 // Intialise mform.
 $mform = new \report_coursecompletion\form\report(null, array("showallusers" => $showallusers));
@@ -348,7 +325,19 @@ $buttonstring = get_string('exportbutton', 'report_coursecompletion');
 echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
-
+/**
+ * Helper function to build sql. - NEEDS To be moved/rewritten.
+ *
+ * @param stdClass $data
+ * @param string $where
+ * @param array $params
+ * @param string $dbfield
+ * @param string $fieldname
+ * @param string $comparison
+ * @param bool $startgroup
+ * @param bool $forceand
+ * @param bool $endgroup
+ */
 function process_data_field(&$data, &$where, &$params, $dbfield, $fieldname, $comparison,
                             $startgroup = false, $forceand = false, $endgroup = false) {
     if (isset($data->{"$fieldname"}) && $data->{"$fieldname"}) {
