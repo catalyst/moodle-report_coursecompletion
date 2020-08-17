@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Coursecompletion reportform class.
+ * Coursecompletion report class.
  *
  * @package    report_coursecompletion
  * @copyright  2017 Catalyst IT Ltd
@@ -23,11 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace report_coursecompletion\form;
+
 defined("MOODLE_INTERNAL") || die;
 
 require_once($CFG->libdir."/formslib.php");
 
-class ReportForm extends moodleform {
+class report extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 

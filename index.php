@@ -25,7 +25,6 @@
 
 require_once(__DIR__."/../../config.php");
 require_once($CFG->libdir."/adminlib.php");
-require_once($CFG->dirroot.'/report/coursecompletion/forms.php');
 
 $course = $DB->get_record('course', array('id' => SITEID));
 $userid = $USER->id;
@@ -132,7 +131,7 @@ $dir = $dir === 'DESC' ? 'DESC' : 'ASC';
 $perpage = min(100, $perpage);
 
 //Intialise mform.
-$mform = new ReportForm();
+$mform = new \report_coursecompletion\form\report();
 $data = $mform->get_data();
 
 //Use the session to hold the form data in case they refresh the page after a post.
