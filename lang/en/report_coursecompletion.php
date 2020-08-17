@@ -25,6 +25,8 @@
 // Privacy API.
 $string['count_string'] = '{$a->filter} shown of total: {$a->total}';
 $string['coursecompletion'] = 'Course completion';
+$string['coursecompletion:viewall'] = 'View course course completion report for all users.';
+$string['coursecompletion:view'] = 'View course my course completion report.';
 $string['exportbutton'] = 'Export csv';
 $string['form:active'] = 'Show active';
 $string['form:any_category'] = 'Any';
