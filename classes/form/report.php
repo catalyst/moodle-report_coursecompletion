@@ -32,7 +32,7 @@ require_once($CFG->libdir."/formslib.php");
 /**
  * Class report
  *
- * @package report_coursecompletion\form
+ * @package report_coursecompletion
  * @copyright  2017 Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -44,7 +44,6 @@ class report extends \moodleform {
      */
     public function definition() {
         $mform = $this->_form;
-
         if (IS_ADMIN) {
             $mform->addElement("header", "section_userdetails", get_string("form:section_userdetails", "report_coursecompletion"));
             $mform->addElement("text", "firstname", get_string("form:firstname", "report_coursecompletion"));

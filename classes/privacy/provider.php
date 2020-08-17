@@ -30,8 +30,8 @@ defined('MOODLE_INTERNAL') || die();
  * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
  * @package    report_coursecompletion
- * @copyright 	Catalyst IT {@link http://catalyst.net.nz}
- * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  Catalyst IT {@link http://catalyst.net.nz}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
     // This plugin does not store any personal user data.
