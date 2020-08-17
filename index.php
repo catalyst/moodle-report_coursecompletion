@@ -133,7 +133,7 @@ $dir = $dir === 'DESC' ? 'DESC' : 'ASC';
 $perpage = min(100, $perpage);
 
 // Intialise mform.
-$mform = new \report_coursecompletion\form\report();
+$mform = new \report_coursecompletion\form\report(null, array("showallusers" => $showallusers));
 $data = $mform->get_data();
 
 // Use the session to hold the form data in case they refresh the page after a post.

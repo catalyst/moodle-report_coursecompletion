@@ -44,7 +44,7 @@ class report extends \moodleform {
      */
     public function definition() {
         $mform = $this->_form;
-        if (IS_ADMIN) {
+        if (!empty($this->_customdata['showallusers'])) {
             $mform->addElement("header", "section_userdetails", get_string("form:section_userdetails", "report_coursecompletion"));
             $mform->addElement("text", "firstname", get_string("form:firstname", "report_coursecompletion"));
             $mform->setType("firstname", PARAM_ALPHA);
