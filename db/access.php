@@ -34,4 +34,13 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+    'report/coursecompletion:view' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_USER,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    ),
  );
