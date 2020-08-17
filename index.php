@@ -319,12 +319,13 @@ foreach($records as $record) {
     $final = new stdClass();
     if (IS_ADMIN) {
         $finalname = fullname($record);
-        $final->fullname = add_link('/user/view.php', array('id' =>$record->userid), $finalname);
+        $final->fullname = html_writer::link(new moodle_url('/user/view.php', array('id' => $record->userid)), $finalname);
+
         $final->email = $record->email;
     }
-    $final->course = add_link('/course/view.php', array('id' =>$record->course), $record->fullname);
-    $final->timestarted = time_format($record->timestarted);
-    $final->timecompleted = time_format($record->timecompleted);
+    $final->course = html_writer::link(new moodle_url('/course/view.php', array('id' => $record->course)), $record->fullname);
+    $final->timestarted = !empty($record->timestarted) ? userdate($record->timestarted) : "-";
+    $final->timecompleted = !empty($record->timecompleted) ? userdate($record->timecompleted) : "-";
     $final->completionstatus = $record->timecompleted ? 'Yes' : 'No';
     $table->data[] = $final;
 }
@@ -335,23 +336,16 @@ $buttonstring = get_string('exportbutton', 'report_coursecompletion');
 echo $OUTPUT->single_button($buttonurl, $buttonstring);
 echo $OUTPUT->footer();
 
-function add_condition_connectors(&$data, &$where, &$params, $force_and = false) {
-    if(!empty($params)) {
-        if($force_and || (isset($data->operator) && $data->operator == 0)) {
-            $where .= " AND ";
-        } else {
-            $where .= " OR ";
-        }
-    }
-}
-
-function add_link($url, $params, $string) {
-    return html_writer::link(new moodle_url($url, $params), $string);
-}
 
 function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $comparison, $start_group = false, $force_and = false, $end_group = false) {
     if(isset($data->{"$field_name"}) && $data->{"$field_name"}) {
-        add_condition_connectors($data, $where, $params, $force_and);
+        if(!empty($params)) {
+            if($force_and || (isset($data->operator) && $data->operator == 0)) {
+                $where .= " AND ";
+            } else {
+                $where .= " OR ";
+            }
+        }
         $params[$field_name] = $data->{"$field_name"}.($comparison == "LIKE" ? "%" : "");
 
         if($start_group) {
@@ -374,12 +368,3 @@ function process_data_field(&$data, &$where, &$params, $db_field, $field_name, $
         }
     }
 }
-
-function time_format($time) {
-    if(isset($time) && $time != 0) {
-        return userdate($time);
-    } else {
-        return "-";
-    }
-}
-
