@@ -244,7 +244,7 @@ if($export) {
         $final->course = $record->fullname;
         $final->timestarted = time_format($record->timestarted);
         $final->timecompleted = time_format($record->timecompleted);
-        $final->completionstatus = $record->timecompleted ? 'Yes' : 'No';
+        $final->completionstatus = $record->timecompleted ? get_string('yes') : get_string('no');
         fputcsv($output, (array)$final);
     }
 
@@ -326,7 +326,7 @@ foreach($records as $record) {
     $final->course = html_writer::link(new moodle_url('/course/view.php', array('id' => $record->course)), $record->fullname);
     $final->timestarted = !empty($record->timestarted) ? userdate($record->timestarted) : "-";
     $final->timecompleted = !empty($record->timecompleted) ? userdate($record->timecompleted) : "-";
-    $final->completionstatus = $record->timecompleted ? 'Yes' : 'No';
+    $final->completionstatus = $record->timecompleted ? get_string('yes') : get_string('no');
     $table->data[] = $final;
 }
 
