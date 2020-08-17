@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for report_coursecompletion.
  *
  * @package    report_coursecompletion
- * @copyright  Catalyst IT 2020
+ * @copyright  2018 Catalyst IT {@link http://catalyst.net.nz}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,12 +30,10 @@ defined('MOODLE_INTERNAL') || die();
  * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
  * @package    report_coursecompletion
- * @copyright  Catalyst IT {@link http://catalyst.net.nz}
+ * @copyright  2018 Catalyst IT {@link http://catalyst.net.nz}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
-    // This plugin does not store any personal user data.
-    use \core_privacy\local\legacy_polyfill;
 
     /**
      * Get the language string identifier with the component's language
@@ -43,7 +41,7 @@ class provider implements \core_privacy\local\metadata\null_provider {
      *
      * @return  string
      */
-    public static function _get_reason() {
+    public static function get_reason() : string {
         return 'privacy:no_userid_data';
     }
 }
