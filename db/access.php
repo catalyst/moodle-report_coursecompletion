@@ -17,15 +17,15 @@
 /**
  * Define capabilities for the coursecompletion report
  *
- * @package    report
- * @subpackage coursecompletion
+ * @package    report_coursecompletion
  * @copyright  2017 Catalyst IT Ltd
  * @author     Oliver Redding <oliverredding@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$capabilities = array(
+defined('MOODLE_INTERNAL') || die();
 
+$capabilities = array(
     'report/coursecompletion:viewall' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
@@ -34,32 +34,4 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-
-    'report/coursecompletion:view' => array(
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_USER,
-        'archetypes' => array(
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
-
-    'report/coursecompletion:view' => array(
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'student' => CAP_ALLOW
-        )
-    ),
-
-    'report/coursecompletion:view' => array(
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'user' => CAP_ALLOW
-        )
-    ),
-
  );
-?>
