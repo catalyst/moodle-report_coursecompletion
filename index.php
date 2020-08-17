@@ -289,22 +289,22 @@ foreach($columns as $column) {
     $final = array();
     foreach($scolumns[$column] as $sortcolumn) {
         if($sort != $sortcolumn) {
-            $column_dir = $dir;
-            $column_icon = "";
+            $cdir = $dir;
+            $cicon = "";
         } else {
-            $column_dir = $dir == "ASC" ? "DESC" : "ASC";
-            $column_icon_dir = ($dir == "ASC") ? "down" : "up";
-            $column_icon = " <img src=\"" . $OUTPUT->pix_url("t/" . $column_icon_dir) . "\" alt=\"\" />";
+            $cdir = $dir == "ASC" ? "DESC" : "ASC";
+            $cicondir = ($dir == "ASC") ? "down" : "up";
+            $cicon = $OUTPUT->pix_icon('t/'. $cicondir, get_string($cicondir));
         }
         //Get a string for this sort link.
         $column_header = get_string("table:sort_header_$sortcolumn", 'report_coursecompletion');
         //Update parameters for sort and direction for this column in the final url.
         $base_url->param('sort', $sortcolumn);
-        $base_url->param('dir', $column_dir);
+        $base_url->param('dir', $cdir);
         if ( $sortcolumn === "completionstatus") {
             $final[] = "<a href=javascript:void(0)>$column_header</a>";
         } else {
-            $final[] = "<a href=$base_url#table>$column_header</a>$column_icon";
+            $final[] = "<a href=$base_url#table>$column_header</a>$cicon";
         }
     }
     //If one column has multiple sorts, combine them into one entry for that column.
