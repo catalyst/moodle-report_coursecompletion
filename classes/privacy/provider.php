@@ -18,6 +18,7 @@
  * Privacy Subsystem implementation for report_coursecompletion.
  *
  * @package    report_coursecompletion
+ * @copyright  Catalyst IT 2020
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,9 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for report_coursecompletion implementing null_provider.
  *
+ * @package    report_coursecompletion
  * @copyright 	Catalyst IT {@link http://catalyst.net.nz}
- * @author 	bO Pierce 
- * @contributor Michael Nixon <michael.nixon@catalyst.net.nz>
  * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
@@ -40,11 +40,6 @@ class provider implements \core_privacy\local\metadata\null_provider {
     /**
      * Get the language string identifier with the component's language
      * file to explain why this plugin stores no data.
-     *
-     * This function is compatible with old php version.
-     * Diff is the underscore '_' in the beginning.
-     * But get_reason() still works 
-     * because of the trait legacy_polyfill.
      *
      * @return  string
      */

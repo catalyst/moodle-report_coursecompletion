@@ -25,11 +25,23 @@
 
 namespace report_coursecompletion\form;
 
-defined("MOODLE_INTERNAL") || die;
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir."/formslib.php");
 
+/**
+ * Class report
+ *
+ * @package report_coursecompletion\form
+ * @copyright  2017 Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class report extends \moodleform {
+    /**
+     * Form definition
+     *
+     * @throws \coding_exception
+     */
     public function definition() {
         $mform = $this->_form;
 
@@ -52,64 +64,84 @@ class report extends \moodleform {
 
         $mform->addElement("header", "section_coursedetails", get_string("form:section_coursedetails", "report_coursecompletion"));
         $categories = $this->get_course_categories();
-        $mform->addElement("select", "course_categories", get_string("form:course_categories", "report_coursecompletion"), $categories);
+        $mform->addElement("select", "course_categories",
+            get_string("form:course_categories", "report_coursecompletion"), $categories);
         $mform->setDefault("course_categories", 0);
         $mform->addElement("text", "course", get_string("form:course", "report_coursecompletion"));
-        $complete_options = [
+        $completeoptions = [
             get_string("form:completed_options_any", "report_coursecompletion"),
             get_string("form:completed_options_completed", "report_coursecompletion"),
             get_string("form:completed_options_not_completed", "report_coursecompletion")
         ];
-        $mform->addElement("select", "completed_options", get_string("form:completed_options", "report_coursecompletion"), $complete_options);
+        $mform->addElement("select", "completed_options",
+            get_string("form:completed_options", "report_coursecompletion"), $completeoptions);
         $mform->setType("course", PARAM_TEXT);
 
         $options = ['optional' => true];
         $mform->addElement("header", "section_timecompleted", get_string("form:section_timecompleted", "report_coursecompletion"));
         $mform->setExpanded("section_timecompleted", false);
-        $mform->addElement('date_selector', 'timecompleted_after', get_string("form:timecompleted_after", "report_coursecompletion"), $options);
-        $mform->addElement('date_selector', 'timecompleted_before', get_string("form:timecompleted_before", "report_coursecompletion"), $options);
+        $mform->addElement('date_selector', 'timecompleted_after',
+            get_string("form:timecompleted_after", "report_coursecompletion"), $options);
+        $mform->addElement('date_selector', 'timecompleted_before',
+            get_string("form:timecompleted_before", "report_coursecompletion"), $options);
 
         $mform->addElement("header", "section_timestarted", get_string("form:section_timestarted", "report_coursecompletion"));
 
-        $mform->addElement('date_selector', 'timestarted_after', get_string("form:timestarted_after", "report_coursecompletion"), $options);
-        $mform->addElement('date_selector', 'timestarted_before', get_string("form:timestarted_before", "report_coursecompletion"), $options);
+        $mform->addElement('date_selector', 'timestarted_after',
+            get_string("form:timestarted_after", "report_coursecompletion"), $options);
+        $mform->addElement('date_selector', 'timestarted_before',
+            get_string("form:timestarted_before", "report_coursecompletion"), $options);
         $mform->closeHeaderBefore("search_operators");
         $mform->setExpanded("section_timecompleted", false);
 
-        $radio_array = [];
-        $radio_array[] = $mform->createElement("radio", "operator", "", get_string("form:operator_and", "report_coursecompletion"), 0);
-        $radio_array[] = $mform->createElement("static", "space", "", "<br>");
-        $radio_array[] = $mform->createElement("radio", "operator", "", get_string("form:operator_or", "report_coursecompletion"), 1);
-        $mform->addGroup($radio_array, "search_operators", get_string("form:operator", "report_coursecompletion"), array(" "), false);
+        $radioarray = [];
+        $radioarray[] = $mform->createElement("radio", "operator", "",
+            get_string("form:operator_and", "report_coursecompletion"), 0);
+        $radioarray[] = $mform->createElement("static", "space", "", "<br>");
+        $radioarray[] = $mform->createElement("radio", "operator", "",
+            get_string("form:operator_or", "report_coursecompletion"), 1);
+        $mform->addGroup($radioarray, "search_operators",
+            get_string("form:operator", "report_coursecompletion"), array(" "), false);
         $mform->setDefault("operator", 0);
 
         $this->add_action_buttons(false, get_string("form:search", "report_coursecompletion"));
     }
 
+    /**
+     * Helper function to get course_categories.
+     * @return array
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     private function get_course_categories() {
         global $DB;
-        $final_categories = [];
-        $all_categories = $DB->get_records("course_categories");
+        $finalcategories = [];
+        $allcategories = $DB->get_records("course_categories");
 
-        $final_categories[] = get_string("form:any_category", "report_coursecompletion");
-        foreach ($all_categories as $category) {
-            $final_categories[$category->id] = $category->name;
+        $finalcategories[] = get_string("form:any_category", "report_coursecompletion");
+        foreach ($allcategories as $category) {
+            $finalcategories[$category->id] = $category->name;
         }
 
-        return $final_categories;
+        return $finalcategories;
     }
 
+    /**
+     * Helper function to get cohorts.
+     * @return array
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     private function get_cohorts() {
         global $DB;
-        $final_cohorts = [];
-        $all_cohorts = $DB->get_records("cohort");
+        $finalcohorts = [];
+        $allcohorts = $DB->get_records("cohort");
 
-        $final_cohorts[] = get_string("form:any_cohort", "report_coursecompletion");
-        foreach ($all_cohorts as $cohort) {
-            $final_cohorts[$cohort->id] = $cohort->name;
+        $finalcohorts[] = get_string("form:any_cohort", "report_coursecompletion");
+        foreach ($allcohorts as $cohort) {
+            $finalcohorts[$cohort->id] = $cohort->name;
         }
 
-        return $final_cohorts;
+        return $finalcohorts;
     }
 }
-
