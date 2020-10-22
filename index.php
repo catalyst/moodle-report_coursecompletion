@@ -65,6 +65,7 @@ $perpage = min(100, $perpage);
 // Columns of the report.
 $columns = array(
     "course",
+    "enrolmentcreated",
     "timestarted",
     "timecompleted",
     "completionstatus",
@@ -73,6 +74,7 @@ $columns = array(
 // Sort sql fields for each column.
 $scolumns = array(
     'course' => array('c.fullname'),
+    'enrolmentcreated' => array('uet.timecreated'),
     'timestarted' => array('cc.timestarted'),
     'timecompleted' => array('cc.timecompleted'),
     'completionstatus' => array('completionstatus'),
@@ -179,10 +181,15 @@ $orderby = "ORDER BY $sort $dir";
 $usercols = $showallusers ? get_all_user_name_fields(true, 'u') . ", u.email, " : "";
 
 // Generate the final SQL.
-$sql = "SELECT cc.id, cc.userid,$usercols cc.course, c.fullname, cc.timestarted, cc.timecompleted
+$sql = "SELECT cc.id, cc.userid,$usercols cc.course, c.fullname, cc.timestarted, cc.timecompleted,
+               uet.timecreated as enrolmentcreated
         FROM {course_completions} AS cc
         JOIN {user} AS u ON cc.userid = u.id
         JOIN {course} AS c ON cc.course = c.id
+        JOIN (SELECT max(ue.timecreated) as timecreated, ue.userid, e.courseid
+                FROM {user_enrolments} ue
+                JOIN {enrol} e ON (e.id = ue.enrolid)
+                GROUP by ue.userid, e.courseid) uet ON uet.courseid = c.id AND uet.userid = u.id
         $cohortjoin $where $orderby";
 
 // The sql for the parameterised count.
@@ -226,6 +233,7 @@ if ($export) {
             $final->email = $record->email;
         }
         $final->course = $record->fullname;
+        $final->enrolmentcreated = time_format($record->enrolmentcreated);
         $final->timestarted = time_format($record->timestarted);
         $final->timecompleted = time_format($record->timecompleted);
         $final->completionstatus = $record->timecompleted ? get_string('yes') : get_string('no');
@@ -312,6 +320,7 @@ foreach ($records as $record) {
         $final->email = $record->email;
     }
     $final->course = html_writer::link(new moodle_url('/course/view.php', array('id' => $record->course)), $record->fullname);
+    $final->enrolmentcreated = !empty($record->enrolmentcreated) ? userdate($record->enrolmentcreated) : "-";
     $final->timestarted = !empty($record->timestarted) ? userdate($record->timestarted) : "-";
     $final->timecompleted = !empty($record->timecompleted) ? userdate($record->timecompleted) : "-";
     $final->completionstatus = $record->timecompleted ? get_string('yes') : get_string('no');
