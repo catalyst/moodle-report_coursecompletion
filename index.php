@@ -136,10 +136,8 @@ if ($data) {// Build the SQL query based on the form data.
 
     if (isset($data->completed_options)) {
         if ($data->completed_options == 1) {
-            add_condition_connectors($data, $where, $params);
             $where .= " cc.timecompleted IS NOT NULL";
         } else if ($data->completed_options == 2) {
-            add_condition_connectors($data, $where, $params);
             $where .= " cc.timecompleted IS NULL";
         }
     }
@@ -152,7 +150,6 @@ if ($data) {// Build the SQL query based on the form data.
 
     if ($showallusers && isset($data->cohorts) && $data->cohorts != 0) {
         $cohortjoin = "LEFT JOIN {cohort_members} cm ON u.id = cm.userid AND cm.cohortid = :cohortid";
-        add_condition_connectors($data, $where, $params);
         $where .= " cm.id IS NOT NULL ";
         $params["cohortid"] = $data->cohorts;
     }
