@@ -135,6 +135,7 @@ if ($data) {// Build the SQL query based on the form data.
     process_data_field($data, $where, $params, "c.fullname", "course", "LIKE");
 
     if (isset($data->completed_options)) {
+        $where .= !empty($where) ? " AND " : "";
         if ($data->completed_options == 1) {
             $where .= " cc.timecompleted IS NOT NULL";
         } else if ($data->completed_options == 2) {
